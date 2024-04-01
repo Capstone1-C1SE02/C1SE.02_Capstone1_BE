@@ -1,12 +1,5 @@
 from django.db import models
 
-class Account(models.Model):
-    username = models.CharField(max_length =30, null=False)
-    password = models.CharField(max_length = 30, null = False)
-
-    def __str__(self):
-        return self.name
-
 class Major(models.Model):
     MajorID = models.AutoField(primary_key=True,null= False)
     MajorName = models.CharField(max_length=50,null= False)
@@ -26,11 +19,11 @@ class Academic_Year(models.Model):
 class Academic_Program(models.Model):
     ProgramID = models.AutoField(primary_key=True)
     ProgramName = models.CharField(max_length=50,null= False)
+    ProgramCode = models.CharField(max_length=50,null= False,default='0')
     ModeofStudy = models.CharField(max_length=50,null= False)
     DurationOfTraning = models.CharField(max_length=50,null= False)
     Description = models.TextField()
     MajorID = models.ForeignKey(Major,on_delete = models.CASCADE, to_field = 'MajorID' )
-
     def __str__(self):
         return self.name
 
@@ -55,7 +48,7 @@ class Student(models.Model):
     Email = models.EmailField(max_length=50,null = True)
     MSSV = models.CharField(max_length=50, null= False)
     YearOfAdmission = models.CharField(max_length=50,null= False)
-    YBAP_ID = models.ForeignKey(Year_Based_Academic_Program, on_delete = models.CASCADE, to_field = 'YBAP_ID')
+    ## YBAP_ID = models.ForeignKey(Year_Based_Academic_Program, on_delete = models.CASCADE, to_field = 'YBAP_ID')
 
     def __str__(self):
         return self.name
@@ -76,7 +69,7 @@ class Degree_Infomation(models.Model):
     Classification = models.CharField(max_length=50,null= False)
     YearOfGraduation = models.CharField(max_length=50,null= False)
     SerialNumber = models.CharField(max_length=50,null= False)
-    DegreeBookID = models.ForeignKey(Degree_Book, on_delete = models.CASCADE, to_field = 'DegreeBookID')
+    DegreeBookID = models.OneToOneField(Degree_Book, on_delete = models.CASCADE, to_field = 'DegreeBookID')
 
     def __str__(self):
         return self.name
