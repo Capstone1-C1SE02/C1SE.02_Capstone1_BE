@@ -1,0 +1,18 @@
+# Thư mục virtual environment (môi trường ảo)
+/myenv/
+
+# Tệp database
+*.sqlite3
+
+# Tệp logs
+/logs/
+
+# Tệp được tạo bởi IDE hoặc trình biên dịch
+/.vscode/
+/.idea/
+*.pyc
+__pycache__/
+*.log
+
+# Tệp cấu hình cục bộ (Ví dụ: .env)
+.env
