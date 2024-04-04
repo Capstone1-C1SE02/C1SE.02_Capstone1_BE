@@ -4,6 +4,14 @@ from .models import *
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150)
     password = serializers.CharField(write_only=True)
+    
+class LogoutSerializer(serializers.Serializer):
+    pass
+
+class AcademicYearSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Academic_Year
+        fields = '__all__'
 
 
 class StudentSerializer(serializers.ModelSerializer):
