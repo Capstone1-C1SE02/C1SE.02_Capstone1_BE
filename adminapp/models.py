@@ -48,7 +48,7 @@ class Student(models.Model):
     Email = models.EmailField(max_length=50,null = True)
     MSSV = models.CharField(max_length=50, null= False)
     YearOfAdmission = models.CharField(max_length=50,null= False)
-    ## YBAP_ID = models.ForeignKey(Year_Based_Academic_Program, on_delete = models.CASCADE, to_field = 'YBAP_ID')
+    YBAP_ID = models.ForeignKey(Year_Based_Academic_Program, on_delete = models.CASCADE, to_field = 'YBAP_ID')
 
     def __str__(self):
         return self.name

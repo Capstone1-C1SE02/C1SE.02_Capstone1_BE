@@ -58,7 +58,7 @@ class AcademicYearList(APIView):
         serializer = AcademicYearSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({"data": serializer.data, "message": "Tạo mới thành công"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @authentication_classes([JWTAuthentication])
@@ -100,7 +100,7 @@ class StudentList(APIView):
         serializer = StudentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({"data": serializer.data, "message": "Tạo mới thành công"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
@@ -143,7 +143,7 @@ class AcademicProgramList(APIView):
         serializer = AcademicProgramSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({"data": serializer.data, "message": "Tạo mới thành công"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @authentication_classes([JWTAuthentication])
@@ -174,4 +174,176 @@ class AcademicProgramDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
         
 
+####### Major  API ########
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+class MajorList(APIView):
+    def get(self, request, format=None):
+        major = Major.objects.all()
+        serializer = MajorSerializer(major, many=True)
+        return Response(serializer.data)
+    def post(self, request, format=None):
+        serializer = MajorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data": serializer.data, "message": "Tạo mới thành công"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+class MajorDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Major.objects.get(pk=pk)
+        except Major.DoesNotExist:
+            raise Http404
 
+    def get(self, request, pk, format=None):
+        major = self.get_object(pk)
+        serializer = MajorSerializer(major)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        major = self.get_object(pk)
+        serializer = MajorSerializer(major, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        major = self.get_object(pk)
+        major.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
+
+####### Year Based Academic Program  API ########
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+class YearBasedAcademicProgramList(APIView):
+    def get(self, request, format=None):
+        YBAP_param = Year_Based_Academic_Program.objects.all()
+        serializer = YearBasedAcademiProgramSerializer(YBAP_param, many=True)
+        return Response(serializer.data)
+    def post(self, request, format=None):
+        serializer = YearBasedAcademiProgramSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+class YearBasedAcademicProgramDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Year_Based_Academic_Program.objects.get(pk=pk)
+        except Year_Based_Academic_Program.objects.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        YBAP_param = self.get_object(pk)
+        serializer = YearBasedAcademiProgramSerializer( YBAP_param)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        YBAP_param = self.get_object(pk)
+        serializer = YearBasedAcademiProgramSerializer(YBAP_param, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        YBAP_param = self.get_object(pk)
+        YBAP_param.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+
+
+####### Degree Book  API ########
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+class DegreeBookList(APIView):
+    def get(self, request, format=None):
+        degreebook = Degree_Book.objects.all()
+        serializer = DegreeBookSerializer(degreebook, many=True)
+        return Response(serializer.data)
+    def post(self, request, format=None):
+        serializer = DegreeBookSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data": serializer.data, "message": "Tạo mới thành công"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+class DegreeBookDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Degree_Book.objects.get(pk=pk)
+        except Degree_Book.objects.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        degreebook = self.get_object(pk)
+        serializer = DegreeBookSerializer( degreebook)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        degreebook = self.get_object(pk)
+        serializer = DegreeBookSerializer(degreebook, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        degreebook = self.get_object(pk)
+        degreebook.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+####### Degree Infomation  API ########
+#######################################
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+class DegreeInfomationList(APIView):
+    def get(self, request, format=None):
+        degreeinfo = Degree_Infomation.objects.all()
+        serializer = DegreeInfomationSerializer(degreeinfo, many=True)
+        return Response(serializer.data)
+    def post(self, request, format=None):
+        serializer = DegreeInfomationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data": serializer.data, "message": "Tạo mới thành công"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+class DegreeInfomationDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Degree_Infomation.objects.get(pk=pk)
+        except Degree_Infomation.objects.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        degreeinfo = self.get_object(pk)
+        serializer = DegreeInfomationSerializer( degreeinfo)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        degreeinfo = self.get_object(pk)
+        serializer = DegreeInfomationSerializer(degreeinfo, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        degreeinfo = self.get_object(pk)
+        degreeinfo.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

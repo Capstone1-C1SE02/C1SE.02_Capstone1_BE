@@ -24,4 +24,16 @@ urlpatterns = [
 
     path('academicprogram/',AcademicProgramList.as_view()),
     path('academicprogram/<int:pk>',AcademicProgramDetail.as_view()),
+
+    path('major/',MajorList.as_view()),
+    path('major/<int:pk>',MajorDetail.as_view()),\
+    
+    path('yearbasedacademicprogram/',YearBasedAcademicProgramList.as_view()),
+    path('yearbasedacademicprogram/<int:pk>',YearBasedAcademicProgramDetail.as_view()),
+
+    path('degreebook/',DegreeBookList.as_view()),
+    path('degreebook/<int:pk>',DegreeBookDetail.as_view()),
+
+    path('degreeinfomation/',DegreeInfomationList.as_view()),
+    path('degreeinfomation/<int:pk>',DegreeInfomationDetail.as_view()),
 ]   
