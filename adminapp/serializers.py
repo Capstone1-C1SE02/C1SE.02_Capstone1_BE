@@ -46,6 +46,7 @@ class DegreeBookSerializer(serializers.ModelSerializer):
 
 class DegreeInfomationSerializer(serializers.ModelSerializer):
     degreeBook = DegreeBookSerializer(source='DegreeBookID',many=False)
+    
     class Meta:
         model = Degree_Infomation
         fields = '__all__'
