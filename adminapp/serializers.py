@@ -8,11 +8,6 @@ class LoginSerializer(serializers.Serializer):
 class LogoutSerializer(serializers.Serializer):
     pass
 
-class StudentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Student
-        fields = '__all__'
-
 
 class MajorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,6 +25,7 @@ class AcademicProgramSerializer(serializers.ModelSerializer):
         model = Academic_Program
         fields = '__all__'   
 
+
 class YearBasedAcademiProgramSerializer(serializers.ModelSerializer):
     academic_year = AcademicYearSerializer(source='AcademicYearID',many=False)  # Sử dụng source để chỉ định tên trường trong model academicyear
     program = AcademicProgramSerializer(source='ProgramID',many=False)          # Sử dụng source để chỉ định tên trường trong model academicprogram
@@ -37,7 +33,14 @@ class YearBasedAcademiProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Year_Based_Academic_Program
         fields = ['YBAP_ID', 'academic_year', 'program']
+        
+class StudentSerializer(serializers.ModelSerializer):
+    yearbasedacademicprogram = YearBasedAcademiProgramSerializer(source='YBAP_ID',many=False)
+    class Meta:
+        model = Student
+        fields = '__all__'   
 
+        
 class DegreeBookSerializer(serializers.ModelSerializer):
     student = StudentSerializer(source='StudentID',many=False)
     class Meta:

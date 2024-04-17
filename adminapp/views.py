@@ -26,11 +26,12 @@ class LoginView(APIView):
         if user is not None:
             # Tạo token nếu xác thực thành công
             refresh = RefreshToken.for_user(user)
+            message = "Succesfully"
             tokens = {
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
             }
-            return Response(tokens, status=status.HTTP_200_OK)
+            return Response({"token:":tokens ,"message":message}, status=status.HTTP_200_OK)
         else:
             # Trả về lỗi nếu xác thực thất bại
             return Response({"error": "Incorrect username or password."}, status=status.HTTP_401_UNAUTHORIZED)
