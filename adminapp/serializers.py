@@ -12,7 +12,7 @@ class LogoutSerializer(serializers.Serializer):
 class MajorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Major
-        fields = '__all__'   
+        fields =['MajorID','MajorName','Description','MajorCode']  
 
 class AcademicYearSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,40 +20,79 @@ class AcademicYearSerializer(serializers.ModelSerializer):
         fields = '__all__'   
 
 class AcademicProgramSerializer(serializers.ModelSerializer):
-    major = MajorSerializer(source='MajorID',many=False)
+    MajorName = serializers.SerializerMethodField()
     class Meta:
         model = Academic_Program
-        fields = '__all__'   
+        fields = ['ProgramID','ProgramName', 'ProgramCode', 'ModeofStudy', 'DurationOfTraning', 'Description', 'MajorID','MajorName'] 
+    def get_MajorName(self, obj):
+        return obj.MajorID.MajorName
+    
+class AcademicProgramPostMethodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Academic_Program
+        fields = '__all__'
 
 
 class YearBasedAcademiProgramSerializer(serializers.ModelSerializer):
-    academic_year = AcademicYearSerializer(source='AcademicYearID',many=False)  # Sử dụng source để chỉ định tên trường trong model academicyear
-    program = AcademicProgramSerializer(source='ProgramID',many=False)          # Sử dụng source để chỉ định tên trường trong model academicprogram
+    programName = serializers.CharField(source='ProgramID.ProgramName')
+    majorID = serializers.IntegerField(source='ProgramID.MajorID.MajorID')
+    majorName = serializers.CharField(source='ProgramID.MajorID.MajorName')
+    academicYear = serializers.CharField(source='AcademicYearID.Year')
     
     class Meta:
         model = Year_Based_Academic_Program
-        fields = ['YBAP_ID', 'academic_year', 'program']
-        
-class StudentSerializer(serializers.ModelSerializer):
+        fields = ['YBAP_ID', 'ProgramID', 'programName', 'majorID', 'majorName', 'AcademicYearID', 'academicYear']
+    
+    
+class StudentDetailSerializer(serializers.ModelSerializer):
     yearbasedacademicprogram = YearBasedAcademiProgramSerializer(source='YBAP_ID',many=False)
+    program_name = serializers.SerializerMethodField()
+    major_name = serializers.SerializerMethodField()
+    StudentName = serializers.SerializerMethodField()
+
     class Meta:
         model = Student
-        fields = '__all__'   
+        exclude = ['FirstName', 'LastName']
 
-        
+    def get_StudentName(self, obj):
+        # Phương thức để lấy giá trị của trường StudentName
+        return f"{obj.LastName} {obj.FirstName}"
+    
+    def get_program_name(self, obj):
+        if obj.YBAP_ID and obj.YBAP_ID.ProgramID:
+            return obj.YBAP_ID.ProgramID.ProgramName
+        return None
+    
+    def get_major_name(self, obj):
+        if obj.YBAP_ID and obj.YBAP_ID.ProgramID and obj.YBAP_ID.ProgramID.MajorID:
+            return obj.YBAP_ID.ProgramID.MajorID.MajorName
+        return None
+
+
+class StudentPostMethodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = '__all__'
+    
+
 class DegreeBookSerializer(serializers.ModelSerializer):
-    student = StudentSerializer(source='StudentID',many=False)
+    student = StudentDetailSerializer(source='StudentID',many=False)
     class Meta:
         model = Degree_Book
         fields = '__all__'
 
-class DegreeInfomationSerializer(serializers.ModelSerializer):
+class DegreeInformationSerializer(serializers.ModelSerializer):
     degreeBook = DegreeBookSerializer(source='DegreeBookID',many=False)
     
     class Meta:
-        model = Degree_Infomation
+        model = Degree_Information
         fields = '__all__'
 
 
+class RetrievalByTextSerializer(serializers.Serializer):
+    student = StudentDetailSerializer(source='StudentID',many=False)
+    degreeBook = DegreeBookSerializer(source='DegreeBookID',many=False)
 
-
+    class Meta:
+        model = Degree_Information
+        fields = ['StudentName', 'MajorName', 'ProgramName', 'Classification','BirthOfDate','MSSV','NumberInTheDegreeBook','YearOfGraduation','SerialNumber']

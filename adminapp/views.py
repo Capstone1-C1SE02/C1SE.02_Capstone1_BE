@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
+from django.http import JsonResponse
 
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -87,7 +88,7 @@ class AcademicYearDetail(APIView):
     def delete(self, request, pk, format=None):
         academicYear = self.get_object(pk)
         academicYear.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Xóa thành công"}, status=status.HTTP_204_NO_CONTENT)
 
 ####### Student API ########
 @authentication_classes([JWTAuthentication])
@@ -95,10 +96,10 @@ class AcademicYearDetail(APIView):
 class StudentList(APIView):
     def get(self, request, format=None):
         student = Student.objects.all()
-        serializer = StudentSerializer(student, many=True)
+        serializer = StudentDetailSerializer(student, many=True)
         return Response(serializer.data)
     def post(self, request, format=None):
-        serializer = StudentSerializer(data=request.data)
+        serializer = StudentPostMethodSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"data": serializer.data, "message": "Tạo mới thành công"}, status=status.HTTP_201_CREATED)
@@ -116,12 +117,12 @@ class StudentDetail(APIView):
 
     def get(self, request, pk, format=None):
         student = self.get_object(pk)
-        serializer = StudentSerializer(student)
+        serializer = StudentDetailSerializer(student)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
         student = self.get_object(pk)
-        serializer = StudentSerializer(student, data=request.data)
+        serializer = StudentDetailSerializer(student, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -130,7 +131,7 @@ class StudentDetail(APIView):
     def delete(self, request, pk, format=None):
         student = self.get_object(pk)
         student.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Xóa thành công"}, status=status.HTTP_204_NO_CONTENT)
     
 ####### Academic Program API ########
 @authentication_classes([JWTAuthentication])
@@ -141,7 +142,7 @@ class AcademicProgramList(APIView):
         serializer = AcademicProgramSerializer(academicProgram, many=True)
         return Response(serializer.data)
     def post(self, request, format=None):
-        serializer = AcademicProgramSerializer(data=request.data)
+        serializer = AcademicProgramPostMethodSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"data": serializer.data, "message": "Tạo mới thành công"}, status=status.HTTP_201_CREATED)
@@ -172,7 +173,7 @@ class AcademicProgramDetail(APIView):
     def delete(self, request, pk, format=None):
         academicProgram = self.get_object(pk)
         academicProgram.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Xóa thành công"}, status=status.HTTP_204_NO_CONTENT)
         
 
 ####### Major  API ########
@@ -215,7 +216,7 @@ class MajorDetail(APIView):
     def delete(self, request, pk, format=None):
         major = self.get_object(pk)
         major.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Xóa thành công"}, status=status.HTTP_204_NO_CONTENT)
         
 
 ####### Year Based Academic Program  API ########
@@ -258,7 +259,7 @@ class YearBasedAcademicProgramDetail(APIView):
     def delete(self, request, pk, format=None):
         YBAP_param = self.get_object(pk)
         YBAP_param.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Xóa thành công"}, status=status.HTTP_204_NO_CONTENT)
     
 
 
@@ -303,7 +304,7 @@ class DegreeBookDetail(APIView):
     def delete(self, request, pk, format=None):
         degreebook = self.get_object(pk)
         degreebook.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Xóa thành công"}, status=status.HTTP_204_NO_CONTENT)
     
 
 ####### Degree Infomation  API ########
@@ -312,11 +313,11 @@ class DegreeBookDetail(APIView):
 @permission_classes([IsAuthenticated])
 class DegreeInfomationList(APIView):
     def get(self, request, format=None):
-        degreeinfo = Degree_Infomation.objects.all()
-        serializer = DegreeInfomationSerializer(degreeinfo, many=True)
+        degreeinfo = Degree_Information.objects.all()
+        serializer = DegreeInformationSerializer(degreeinfo, many=True)
         return Response(serializer.data)
     def post(self, request, format=None):
-        serializer = DegreeInfomationSerializer(data=request.data)
+        serializer = DegreeInformationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"data": serializer.data, "message": "Tạo mới thành công"}, status=status.HTTP_201_CREATED)
@@ -327,18 +328,18 @@ class DegreeInfomationList(APIView):
 class DegreeInfomationDetail(APIView):
     def get_object(self, pk):
         try:
-            return Degree_Infomation.objects.get(pk=pk)
-        except Degree_Infomation.objects.DoesNotExist:
+            return Degree_Information.objects.get(pk=pk)
+        except Degree_Information.objects.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
         degreeinfo = self.get_object(pk)
-        serializer = DegreeInfomationSerializer( degreeinfo)
+        serializer = DegreeInformationSerializer( degreeinfo)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
         degreeinfo = self.get_object(pk)
-        serializer = DegreeInfomationSerializer(degreeinfo, data=request.data)
+        serializer = DegreeInformationSerializer(degreeinfo, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -347,4 +348,93 @@ class DegreeInfomationDetail(APIView):
     def delete(self, request, pk, format=None):
         degreeinfo = self.get_object(pk)
         degreeinfo.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Xóa thành công"}, status=status.HTTP_204_NO_CONTENT)
+    
+
+
+
+####### Degree Information Retrival throught Text API  ########
+
+class RetrievalThroughTextAPI(APIView):
+    def post(self, request, format=None):
+        serialNumber = request.data.get('SerialNumber')
+        numberInDegreeBook = request.data.get('NumberInTheDegreeBook')
+        studentName = request.data.get('StudentName')
+        
+        if not (serialNumber and numberInDegreeBook and studentName):
+            return Response({"message": "Dữ liệu không hợp lệ"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            degree_information = Degree_Information.objects.get(
+                SerialNumber=serialNumber,
+                DegreeBookID__NumberInTheDegreeBook=numberInDegreeBook,
+                DegreeBookID__StudentID__StudentName=studentName,
+            )
+            student_name = degree_information.DegreeBookID.StudentID.StudentName
+            major_name = degree_information.DegreeBookID.StudentID.YBAP_ID.program.MajorName
+            program_name = degree_information.DegreeBookID.StudentID.YBAP_ID.program.ProgramName
+            classification = degree_information.Classification
+            birth_of_date = degree_information.DegreeBookID.StudentID.DateOfBirth
+            mssv = degree_information.DegreeBookID.StudentID.MSSV
+            number_in_degree_book = degree_information.DegreeBookID.NumberInTheDegreeBook
+            year_of_graduation = degree_information.YearOfGraduation
+            
+            # Trả về dữ liệu
+            data = {
+                'StudentName': student_name,
+                'MajorName': major_name,
+                'ProgramName': program_name,
+                'Classification': classification,
+                'BirthOfDate': birth_of_date,
+                'MSSV': mssv,
+                'NumberInTheDegreeBook': number_in_degree_book,
+                'YearOfGraduation': year_of_graduation,
+                'SerialNumber': serialNumber
+            }
+            return JsonResponse(data, status=status.HTTP_200_OK)
+        except Degree_Information.DoesNotExist:
+            return Response({"message": "Không tìm thấy thông tin"}, status=status.HTTP_404_NOT_FOUND)
+        
+        # if serializer.is_valid():
+        #     serialNumber = serializer.validated_data.get('SerialNumber')
+        #     numberInDegreeBook = serializer.validated_data.get('NumberInTheDegreeBook')
+        #     studentName = serializer.validated_data.get('StudentName')
+        #     try:
+        #         degree_information = Degree_Information.objects.get(
+        #             SerialNumber=serialNumber,
+        #             DegreeBookID__NumberInTheDegreeBook=numberInDegreeBook,
+        #             DegreeBookID__StudentID__StudentName=studentName,
+        #         )
+        #         data = {
+        #             'student': {
+        #                 'StudentName': studentName
+        #             },
+        #             'degreeInformation': {
+        #                 'SerialNumber': serialNumber,
+
+        #             },
+        #             'degreeBook': {
+        #                 'NumberInTheDegreeBook': numberInDegreeBook
+        #             }
+        #         }
+        #         serializer = RetrievalByTextSerializer(data=data)
+        #         if serializer.is_valid():
+        #             return Response(serializer.validated_data, status=status.HTTP_200_OK)
+        #         else:
+        #             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                
+        #         # student_name = degree_information.DegreeBookID.StudentID.StudentName
+        #         # major_name = degree_information.DegreeBookID.StudentID.YBAP_ID.program.MajorName
+        #         # program_name = degree_information.DegreeBookID.StudentID.YBAP_ID.program.ProgramName
+        #         # classification = degree_information.Classification
+        #         # birth_of_date = degree_information.DegreeBookID.StudentID.DateOfBirth
+        #         # mssv = degree_information.DegreeBookID.StudentID.MSSV
+        #         # number_in_degree_book = degree_information.DegreeBookID.NumberInTheDegreeBook
+        #         # year_of_graduation = degree_information.YearOfGraduation
+        #         # serializer = RetrievalByTextSerializer(degree_information)
+        #         # return Response(serializer.data, status=status.HTTP_200_OK)
+            
+            
+
+        
+
+    
