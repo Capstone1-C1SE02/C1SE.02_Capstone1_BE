@@ -30,7 +30,7 @@ class AcademicProgramSerializer(serializers.ModelSerializer):
 class AcademicProgramPostMethodSerializer(serializers.ModelSerializer):
     class Meta:
         model = Academic_Program
-        fields = '__all__'
+        fields = ['ProgramName','ModeofStudy','DurationOfTraning','']
 
 
 class YearBasedAcademiProgramSerializer(serializers.ModelSerializer):
@@ -87,15 +87,10 @@ class DegreeBookSerializer(serializers.ModelSerializer):
         model = Degree_Book
         fields = '__all__'
 
-class DegreeBookPostMethodSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Degree_Book
-        fields = '__all__'
 
 
 class DegreeInformationSerializer(serializers.ModelSerializer):
     degreeBook = DegreeBookSerializer(source='DegreeBookID',many=False)
-    
     class Meta:
         model = Degree_Information
         fields = '__all__'

@@ -6,16 +6,11 @@ class Major(models.Model):
     Description = models.TextField()
     MajorCode = models.CharField(max_length=50,null= False) 
 
-    def __str__(self):
-        return self.name
 
 class Academic_Year(models.Model):
     AcademicYearID = models.AutoField(primary_key=True)
     Year = models.CharField(max_length=50,null= False)
 
-    def __str__(self):
-        return self.name
-    
 
 class Academic_Program(models.Model):
     ProgramID = models.AutoField(primary_key=True)
@@ -25,17 +20,12 @@ class Academic_Program(models.Model):
     DurationOfTraning = models.CharField(max_length=50,null= False)
     Description = models.TextField()
     MajorID = models.ForeignKey(Major,on_delete = models.CASCADE, to_field = 'MajorID' )
-    def __str__(self):
-        return self.name
     
 
 class Year_Based_Academic_Program(models.Model):
     YBAP_ID = models.AutoField(primary_key=True)
     AcademicYearID  = models.ForeignKey(Academic_Year,on_delete = models.CASCADE, to_field = 'AcademicYearID')
     ProgramID = models.ForeignKey(Academic_Program,on_delete = models.CASCADE, to_field = 'ProgramID')
-
-    def __str__(self):
-        return self.name  
 
 class Student(models.Model):
     StudentID = models.AutoField(primary_key=True)
@@ -52,8 +42,6 @@ class Student(models.Model):
     YearOfAdmission = models.CharField(max_length=50,null= False)
     YBAP_ID = models.ForeignKey(Year_Based_Academic_Program, on_delete = models.CASCADE, to_field = 'YBAP_ID')
 
-    def __str__(self):
-        return self.name
     
 
 class Degree_Book(models.Model):
@@ -63,8 +51,6 @@ class Degree_Book(models.Model):
     NumberInTheDegreeBook = models.CharField(max_length=50,null= False)
     StudentID = models.ForeignKey(Student, on_delete = models.CASCADE, to_field = 'StudentID')
 
-    def __str__(self):
-        return self.name
     
 class Degree_Information(models.Model):
     DegreeID = models.AutoField(primary_key=True)
@@ -72,10 +58,6 @@ class Degree_Information(models.Model):
     YearOfGraduation = models.CharField(max_length=50,null= False)
     SerialNumber = models.CharField(max_length=50,null= False)
     DegreeBookID = models.OneToOneField(Degree_Book, on_delete = models.CASCADE, to_field = 'DegreeBookID')
-
-    def __str__(self):
-        return self.name
-    
     
 
 
