@@ -15,6 +15,7 @@ class Academic_Year(models.Model):
 
     def __str__(self):
         return self.name
+    
 
 class Academic_Program(models.Model):
     ProgramID = models.AutoField(primary_key=True)
@@ -26,6 +27,7 @@ class Academic_Program(models.Model):
     MajorID = models.ForeignKey(Major,on_delete = models.CASCADE, to_field = 'MajorID' )
     def __str__(self):
         return self.name
+    
 
 class Year_Based_Academic_Program(models.Model):
     YBAP_ID = models.AutoField(primary_key=True)
@@ -48,7 +50,7 @@ class Student(models.Model):
     Email = models.EmailField(max_length=50,null = True)
     MSSV = models.CharField(max_length=50, null= False)
     YearOfAdmission = models.CharField(max_length=50,null= False)
-    ## YBAP_ID = models.ForeignKey(Year_Based_Academic_Program, on_delete = models.CASCADE, to_field = 'YBAP_ID')
+    YBAP_ID = models.ForeignKey(Year_Based_Academic_Program, on_delete = models.CASCADE, to_field = 'YBAP_ID')
 
     def __str__(self):
         return self.name
@@ -64,7 +66,7 @@ class Degree_Book(models.Model):
     def __str__(self):
         return self.name
     
-class Degree_Infomation(models.Model):
+class Degree_Information(models.Model):
     DegreeID = models.AutoField(primary_key=True)
     Classification = models.CharField(max_length=50,null= False)
     YearOfGraduation = models.CharField(max_length=50,null= False)
